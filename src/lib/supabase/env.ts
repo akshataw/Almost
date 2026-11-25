@@ -1,8 +1,8 @@
 import "server-only";
 
 /**
- * The only place environment secrets are read. `server-only` makes the build fail
- * if any client component imports this file, so the secret key can't reach the browser.
+ * Supabase keys are read only here; the other server secret, PUZZLE_SECRET, only in lib/puzzle/seed.ts.
+ * `server-only` makes the build fail if any client component imports this file.
  */
 export function supabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

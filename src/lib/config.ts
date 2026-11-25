@@ -1,6 +1,6 @@
 /** Public, non-secret game configuration. */
 export const LAUNCH_DATE = "2026-11-20"; // Experiment 001 (UTC)
-export const PUZZLE_VERSION = 3; // bump whenever generator output changes
+export const PUZZLE_VERSION = 4; // bump whenever generator output changes
 export const ROUNDS_PER_DAY = 5;
 export const ATTEMPTS_PER_ROUND = 3;
 export const MAX_ROUND_SCORE = 150;

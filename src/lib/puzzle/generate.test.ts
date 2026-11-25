@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { addDays } from "../date";
 import { hexLightness } from "./color";
 import { DAILY_FORMAT, generateDaily } from "./generate";
+import { dailySeed, requirePuzzleSecret } from "./seed";
 import { validateRound } from "./validate";
 
 const START = "2026-11-20";
@@ -30,6 +31,25 @@ describe("puzzle generation", () => {
         expect(validateRound({ puzzle: p, answerIndex: c.answers[i] })).toEqual({ ok: true });
       });
     }
+  });
+
+  it("can't be reproduced from the public code without the secret", () => {
+    const secretA = "a".repeat(40);
+    const secretB = "b".repeat(40);
+    const withA = generateDaily("2026-12-01", 4, secretA);
+    expect(generateDaily("2026-12-01", 4, secretA)).toEqual(withA); // deterministic with the secret
+    expect(generateDaily("2026-12-01", 4, secretB).answers).not.toEqual(withA.answers);
+    expect(dailySeed("2026-12-01", 4, secretA)).not.toBe(dailySeed("2026-12-01", 4, undefined));
+    expect(dailySeed("2026-12-01", 4, secretA)).not.toContain(secretA);
+  });
+
+  it("refuses to generate real puzzles without a strong secret", () => {
+    const saved = process.env.PUZZLE_SECRET;
+    process.env.PUZZLE_SECRET = "short";
+    expect(() => requirePuzzleSecret()).toThrow(/PUZZLE_SECRET/);
+    delete process.env.PUZZLE_SECRET;
+    expect(() => requirePuzzleSecret()).toThrow(/PUZZLE_SECRET/);
+    if (saved !== undefined) process.env.PUZZLE_SECRET = saved;
   });
 
   it("never puts the answer in the public puzzle data", () => {

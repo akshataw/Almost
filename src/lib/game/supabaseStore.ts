@@ -2,6 +2,7 @@ import "server-only";
 import { after } from "next/server";
 import { PUZZLE_VERSION } from "../config";
 import { generateDaily } from "../puzzle/generate";
+import { requirePuzzleSecret } from "../puzzle/seed";
 import type { DailyChallenge, PuzzleSpec } from "../puzzle/types";
 import { supabaseAdmin } from "../supabase/admin";
 import { streaks } from "./ranking";
@@ -58,7 +59,7 @@ async function loadChallenge(date: string): Promise<DailyChallenge | null> {
 export async function ensureChallenge(date: string, version = PUZZLE_VERSION): Promise<DailyChallenge> {
   const existing = await loadChallenge(date);
   if (existing) return existing;
-  const c = generateDaily(date, version);
+  const c = generateDaily(date, version, requirePuzzleSecret());
   const { error } = await supabaseAdmin()
     .from("daily_challenges")
     .upsert(

@@ -2,6 +2,7 @@ import { PUZZLE_VERSION } from "../config";
 import { hslToHex, type Hsl } from "./color";
 import { JITTER } from "./constants";
 import { createRng, type Rng } from "./rng";
+import { dailySeed } from "./seed";
 import type {
   DailyChallenge,
   Difficulty,
@@ -52,10 +53,6 @@ const PALETTES: { background: string; fill: Hsl }[] = [
 const ROTATION_KINDS: ShapeKind[] = ["wedge", "half", "ell", "bar"];
 const SIZE_KINDS: ShapeKind[] = ["circle", "square", "wedge", "half"];
 
-export function dailySeed(date: string, version = PUZZLE_VERSION): string {
-  return `almost-${date}-v${version}`;
-}
-
 export function generateRound(seed: string, round: number): GeneratedRound {
   const format = DAILY_FORMAT[round - 1];
   if (!format) throw new Error(`No round ${round}`);
@@ -67,8 +64,9 @@ export function generateRound(seed: string, round: number): GeneratedRound {
   throw new Error(`Could not generate a valid puzzle for ${seed} round ${round}`);
 }
 
-export function generateDaily(date: string, version = PUZZLE_VERSION): DailyChallenge {
-  const seed = dailySeed(date, version);
+/** All five rounds for a date. Pass the secret for real puzzles (see seed.ts). */
+export function generateDaily(date: string, version = PUZZLE_VERSION, secret?: string): DailyChallenge {
+  const seed = dailySeed(date, version, secret ?? process.env.PUZZLE_SECRET);
   const rounds = DAILY_FORMAT.map((_, i) => generateRound(seed, i + 1));
   return {
     date,
