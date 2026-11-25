@@ -1,0 +1,50 @@
+# ── secrets & local config (never commit) ─────────────────────
+# all env files: .env, .env.local, .env.production, …
+.env*
+# private keys / certificates
+*.pem
+*.key
+*.p12
+# Vercel project link + pulled env
+.vercel
+# Supabase CLI local state (project ref, tokens)
+supabase/.temp
+supabase/.branches
+# personal Claude Code settings (shared agents in .claude/agents are fine to commit)
+.claude/settings.local.json
+
+# ── dependencies ──────────────────────────────────────────────
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ── build output ──────────────────────────────────────────────
+/.next/
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# ── tests & tooling ───────────────────────────────────────────
+/coverage
+/test-results
+/playwright-report
+/.cache
+
+# ── logs ──────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# ── OS / editor ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea
+*.swp
